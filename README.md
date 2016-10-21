@@ -21,6 +21,12 @@ Our sound cartography’s will then be translated and visualised with Pure Data 
 These patterns can be read as a visual translation of rhythms, silences and noises embedded in a palpable knitted surface.
 [Claire Williams](http://xxxclairewilliamsxxx.wordpress.com/workshops/)
 
+##Project content
+ - Arduino firmware
+ - Eagle PCB : I use the [AYAB Arduino shield](https://bitbucket.org/chris007de/ayab-apparat/src/f6e368fbe0a6?at=master)
+ - Puredata software
+ - Processing software
+
 ##BROTHER KH-940 technicals specifications
 - 200 steacheses
 - Two end lines sensors
@@ -30,23 +36,26 @@ These patterns can be read as a visual translation of rhythms, silences and nois
 - For more specifications you can see the [service manual]( http://maurin.box.free.fr/_DOCs/brother_kh930_knitting_machine_service_manual.pdf)
 
 ##Arduino firmware
-Before to flash the Arduino firmware you will need to set up the THRESHOLD value by using this calibration sketch
+Before to flash the Arduino firmware you will need to set up the THRESHOLD value by using this calibration sketch :
 ``̀
 KnitHack_KH940/Arduino/Calibration/endLignes/endLignes.ino
 ```
 This sketch will give you the endStop sensor values.
-You will need to see the max value of the two endLignes sensors and choose your THRESHOLD under this values.
+You will need to see the max value of the two endStop sensors and choose your THRESHOLD under this values.
 
 The next step is to flash the firmware and perform the calibration :
-- KnitHack_KH940 / Arduino / KH940 / KH940.ino
-These two variables allow you to set the knitter's stitches positions.
-- START_POS_L value 
-- START_POS_R value
-...
+```
+KnitHack_KH940/Arduino/KH940/KH940.ino
+```
+These two variables allow you to set the knitter's stitches positions :
+```
+#define START_POS_L value 
+#define START_POS_R value
+```
 
 ##Softs
 
-### Pure Data
+###Pure Data
 This knitHack Pure Data patch is working in combination with others sound softwares like Audacity.
 The PD patch will analyse the frequencies of the sound with an FFT algorithm to generate the knitting pattern.
 
@@ -55,41 +64,42 @@ The PD patch will analyse the frequencies of the sound with an FFT algorithm to 
 - [QjackCtl](http://qjackctl.sourceforge.net/) : user interface to controll the JACK sound server. At the same time, it is a patch bay and monitoring tool for JACK.
 - [Audacity](http://audacity.sourceforge.net/) : multitrack audio editor for Linux / Unix, MacOS and Windows. It is designed to easily record, play, and edit digital audio files.
 
-##Step by step 
-
-![Texte alternatif](url_de_l'image "texte pour le titre, facultatif")
-
+###Step by step 
 - A add user to the audio group
-  - in a terminal : sudo gpasswd -a "user name" audio
-  - restart your user session
+ - in a terminal : sudo gpasswd -a "user name" audio
+ - restart your user session
 - B load QjackCtl to start jack audio server
-  - select Alsa driver in config
-  - clic on "START"
+ - select Alsa driver in config
+ - clic on "START"
 - C load Pd-extande
-  - Media > Audio configurations > JACK Audio Connection Kit
+ - Media > Audio configurations > JACK Audio Connection Kit
 - D load Audacity
-  - Edition > Preferances > Peripheriques > Hote > Jack Audio Connection Kit
-  - save and restart Audacity
-  - Edition > Preferances > Peripheriques > Peripherique > pd_extended_0
-  - load a sound file
-  - play the sound
+ - Edition > Preferances > Peripheriques > Hote > Jack Audio Connection Kit
+ - save and restart Audacity
+ - Edition > Preferances > Peripheriques > Peripherique > pd_extended_0
+ - load a sound file
+ - play the sound
 - E configure QjackCtl connexions
-  - clic on "CONNECT" to do the audio patchning
-  - Audacity OUTPUT > INPUT Pd-extended OUTPUT > INPUT System
+ - clic on "CONNECT" to do the audio patchning
+ - Audacity OUTPUT > INPUT Pd-extended OUTPUT > INPUT System
 - F open the patch : /PureData/KH940_soundKniting.pd
 - G select the good comport by clicking on 'CHECK_DEVICES'
-  - look the available serial ports on the Pd-extended window
-  - [comport]: available serial ports: ...
-  - set the corresponding serial port number in PORT numbrer box
-  - clic PORT_ON_OFF
+ - look the available serial ports on the Pd-extended window
+ - [comport]: available serial ports: ...
+ - set the corresponding serial port number in PORT numbrer box
+ - clic PORT_ON_OFF
 - H play the sound in Audacity
 - I clic REC
 - J clic SIMULATOR to visualise the pattern
 - ...
 - K start knitting
 
+###Processing
+This simple sketch allow you to send any black and white image.
+
+##knitt
 To start knitting, the carriage must be out of the sticheses on the left side.
-Each time you make a row you must go from one side to the other.
+Each time you make a row you must pass the end ligne sensor.
 At the end of the row you will hear two bip.
-A bip when you pass the end stop sensor end a bip juste after that tell you when all stitch's positions are seted.
+A bip when you pass the end ligne sensor end a bip to tell you when all stitch's positions are seted.
 
